@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxogramas — Sífilis | @vigisifilis</title>
+<style>
+  :root{
+    --navy:#010227;
+    --indigo:#1E1852;
+    --pink-vibrant:#F95EB8;
+    --pink-mid:#FA71C1;
+    --pink-light:#F99ACE;
+    --offwhite:#F6EEF0;
+    --plum:#592460;
+    --lilac:#A25E9C;
+    --wine:#92306A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    background:#FFFCFD;
+    color:var(--navy);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    background:var(--indigo);
+    padding:26px 28px;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:20px;
+  }
+  .header-spacer{display:block;}
+  .header-left{display:flex; flex-direction:row; align-items:center; gap:18px; justify-self:center;}
+  .logo{
+    width:72px;height:72px;
+    border-radius:16px;
+    overflow:hidden;
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--offwhite);
+    box-shadow:0 8px 22px rgba(0,0,0,0.25);
+  }
+  .logo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .header-text{display:flex; flex-direction:column; align-items:flex-start; text-align:left;}
+  .header-text h1{
+    margin:0 0 6px;
+    font-size:1.4rem;
+    font-weight:800;
+    color:#fff;
+  }
+  .header-text h1 .accent{color:var(--pink-vibrant);}
+  .header-text p{
+    margin:0;
+    font-size:.83rem;
+    color:rgba(246,238,240,0.75);
+    max-width:400px;
+    line-height:1.4;
+    text-align:left;
+  }
+  .handle{
+    font-size:.72rem;
+    font-weight:700;
+    color:var(--pink-light);
+    letter-spacing:.4px;
+    margin-top:6px;
+    display:block;
+  }
+  .header-actions{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+    justify-self:end;
+  }
+  @media (max-width:760px){
+    header{grid-template-columns:1fr; justify-items:center; text-align:center;}
+    .header-spacer{display:none;}
+    .header-left{flex-direction:column; text-align:center;}
+    .header-text{align-items:center;}
+    .header-text p{text-align:center;}
+    .header-actions{align-items:center; width:100%; justify-self:center;}
+  }
+  .ficha-btn{
+    background:rgba(246,238,240,0.08);
+    border:1px solid rgba(246,238,240,0.35);
+    color:#fff;
+    padding:10px 18px;
+    border-radius:999px;
+    font-size:.82rem;
+    font-weight:700;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .2s ease;
+  }
+  .ficha-btn:hover{background:rgba(246,238,240,0.18);}
+
+  /* ---------- LAYOUT ---------- */
+  .page{
+    max-width:820px;
+    width:100%;
+    margin:0 auto;
+    padding:36px 20px 60px;
+    flex:1;
+  }
+
+  .card{
+    background:#fff;
+    border-radius:18px;
+    padding:32px 30px;
+    box-shadow:0 10px 34px rgba(1,2,39,0.08);
+    animation:fadeIn .3s ease;
+  }
+
+  /* ---------- PROGRESS TRAIL ---------- */
+  .trail{
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    gap:0;
+    margin-bottom:22px;
+    overflow-x:auto;
+    padding:4px 2px 8px;
+  }
+  .trail:empty{display:none; margin-bottom:0;}
+  .trail-step{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex-shrink:0;
+    width:98px;
+  }
+  .trail-dot{
+    width:26px;height:26px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.72rem;
+    font-weight:800;
+    background:rgba(1,2,39,0.08);
+    color:rgba(1,2,39,0.4);
+    flex-shrink:0;
+  }
+  .trail-step.done .trail-dot{background:var(--indigo); color:#fff;}
+  .trail-step.current .trail-dot{background:var(--pink-vibrant); color:var(--navy); box-shadow:0 0 0 4px rgba(249,94,184,0.2);}
+  .trail-label{
+    margin-top:6px;
+    font-size:.66rem;
+    font-weight:700;
+    color:rgba(1,2,39,0.55);
+    text-align:center;
+    line-height:1.3;
+    max-width:94px;
+  }
+  .trail-step.current .trail-label{color:var(--wine);}
+  .trail-connector{
+    flex-shrink:0;
+    width:24px;
+    height:0;
+    border-top:2px dashed rgba(1,2,39,0.25);
+    margin-top:13px;
+  }
+
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(8px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .passo{
+    font-size:.72rem;
+    font-weight:800;
+    letter-spacing:1px;
+    color:var(--lilac);
+    text-transform:uppercase;
+    margin-bottom:8px;
+    text-align:center;
+  }
+  .question-title{
+    font-size:1.35rem;
+    font-weight:800;
+    color:var(--indigo);
+    margin:0 0 22px;
+    line-height:1.35;
+    text-align:center;
+  }
+  .question-title strong{color:var(--wine);}
+
+  /* ---------- OPTION COLUMNS (question nodes) ---------- */
+  .options-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  @media (max-width:560px){
+    .options-grid{grid-template-columns:1fr;}
+  }
+  .opt-col{
+    border-radius:14px;
+    padding:22px 18px;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+    border:1.5px solid transparent;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:76px;
+    text-align:center;
+  }
+  .opt-col:hover{transform:translateY(-3px);}
+  .opt-col.yes-col{
+    background:rgba(30,24,82,0.05);
+    border-color:rgba(30,24,82,0.15);
+  }
+  .opt-col.yes-col:hover{box-shadow:0 8px 20px rgba(30,24,82,0.15);}
+  .opt-col.no-col{
+    background:rgba(249,94,184,0.06);
+    border-color:rgba(249,94,184,0.3);
+  }
+  .opt-col.no-col:hover{box-shadow:0 8px 20px rgba(249,94,184,0.2);}
+
+  .pill{
+    display:inline-block;
+    font-size:.8rem;
+    font-weight:800;
+    letter-spacing:.6px;
+    padding:9px 30px;
+    border-radius:999px;
+  }
+  .pill.yes-pill{background:var(--indigo); color:#fff;}
+  .pill.no-pill{background:var(--pink-vibrant); color:var(--navy);}
+
+  .sub-box{
+    background:rgba(1,2,39,0.035);
+    border-radius:10px;
+    padding:11px 13px;
+    margin-top:12px;
+    width:100%;
+    font-size:.85rem;
+    line-height:1.45;
+    color:var(--navy);
+    text-align:left;
+  }
+  .sub-box:last-child{margin-bottom:0;}
+  .sub-box .sb-title{font-weight:700; display:block;}
+
+  /* ---------- INFO / RESULT NODES ---------- */
+  .tag{
+    display:block;
+    width:fit-content;
+    margin:0 auto 16px;
+    font-size:.7rem;
+    font-weight:800;
+    letter-spacing:.6px;
+    text-transform:uppercase;
+    padding:5px 13px;
+    border-radius:999px;
+  }
+  .tag.info{background:rgba(162,94,156,0.14); color:var(--lilac);}
+  .tag.result{background:rgba(146,48,106,0.14); color:var(--wine);}
+
+  .single-box{
+    border-radius:14px;
+    padding:20px 22px;
+    font-size:1.02rem;
+    line-height:1.6;
+    color:var(--navy);
+    margin-bottom:22px;
+  }
+  .single-box.info-box{background:rgba(162,94,156,0.07); border:1.5px solid rgba(162,94,156,0.25);}
+  .single-box.result-box{background:rgba(146,48,106,0.08); border:1.5px solid rgba(146,48,106,0.25);}
+
+  .criteria-box{
+    background:rgba(1,2,39,0.035);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:20px;
+  }
+  .criteria-box ul{margin:0; padding-left:18px; font-size:.88rem; line-height:1.6; color:var(--navy);}
+  .criteria-box li{margin-bottom:4px;}
+  .criteria-box .note-text{margin:0; font-size:.86rem; line-height:1.55; color:var(--navy);}
+  .criteria-title{
+    display:block;
+    background:var(--indigo);
+    color:#fff;
+    font-size:.82rem;
+    font-weight:800;
+    padding:9px 13px;
+    border-radius:8px 8px 0 0;
+    margin:-14px -16px 12px;
+    line-height:1.35;
+  }
+
+  button{font-family:inherit; cursor:pointer; border:none; outline:none;}
+  .continue-btn{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    font-size:.98rem;
+    font-weight:800;
+    color:#fff;
+    background:var(--indigo);
+  }
+  .continue-btn:hover{background:var(--wine);}
+  .restart-btn-main{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    font-size:.95rem;
+    font-weight:800;
+    color:var(--wine);
+    background:rgba(146,48,106,0.08);
+    border:1.5px solid rgba(146,48,106,0.3);
+  }
+  .restart-btn-main:hover{background:rgba(146,48,106,0.14);}
+
+  /* ---------- SELECTION SCREEN ---------- */
+  .select-title{
+    text-align:center;
+    font-size:1.2rem;
+    font-weight:800;
+    color:var(--indigo);
+    margin:0 0 6px;
+  }
+  .select-sub{
+    text-align:center;
+    font-size:.85rem;
+    color:rgba(1,2,39,0.55);
+    margin:0 0 26px;
+  }
+  .select-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:16px;
+  }
+  @media (max-width:760px){
+    .select-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:520px){
+    .select-grid{grid-template-columns:1fr;}
+  }
+  .select-card{
+    border-radius:16px;
+    padding:24px 20px;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+    text-align:left;
+  }
+  .select-card:hover{transform:translateY(-4px);}
+  .select-card.card-a{
+    background:rgba(30,24,82,0.05);
+    border:1.5px solid rgba(30,24,82,0.18);
+  }
+  .select-card.card-a:hover{box-shadow:0 10px 26px rgba(30,24,82,0.18);}
+  .select-card.card-b{
+    background:rgba(249,94,184,0.06);
+    border:1.5px solid rgba(249,94,184,0.3);
+  }
+  .select-card.card-b:hover{box-shadow:0 10px 26px rgba(249,94,184,0.22);}
+  .select-card.card-c{
+    background:rgba(146,48,106,0.05);
+    border:1.5px solid rgba(146,48,106,0.25);
+  }
+  .select-card.card-c:hover{box-shadow:0 10px 26px rgba(146,48,106,0.2);}
+  .select-card .sc-icon{
+    width:42px;height:42px;
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;
+    font-size:1.05rem;
+    margin-bottom:14px;
+  }
+  .card-a .sc-icon{background:var(--indigo); color:#fff;}
+  .card-b .sc-icon{background:var(--pink-vibrant); color:var(--navy);}
+  .card-c .sc-icon{background:var(--wine); color:#fff;}
+  .select-card h3{
+    margin:0 0 6px;
+    font-size:1.02rem;
+    font-weight:800;
+    color:var(--navy);
+  }
+  .select-card p{
+    margin:0;
+    font-size:.83rem;
+    line-height:1.5;
+    color:rgba(1,2,39,0.6);
+  }
+
+  /* ---------- FOOTER NAV ---------- */
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:26px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .nav-row-right{
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .back-btn{
+    background:#fff;
+    border:1.5px solid rgba(1,2,39,0.15);
+    color:var(--navy);
+    padding:10px 18px;
+    border-radius:999px;
+    font-size:.85rem;
+    font-weight:700;
+  }
+  .back-btn:hover{border-color:var(--lilac); color:var(--wine);}
+  .back-btn:disabled{opacity:.35; cursor:default;}
+  .back-btn:disabled:hover{border-color:rgba(1,2,39,0.15); color:var(--navy);}
+
+  .restart-link{
+    background:none;
+    color:var(--lilac);
+    font-size:.85rem;
+    font-weight:700;
+  }
+  .restart-link:hover{color:var(--wine); text-decoration:underline;}
+
+  footer.page-footer{
+    text-align:center;
+    margin-top:30px;
+    font-size:.72rem;
+    color:rgba(1,2,39,0.4);
+  }
+  .footer-links{
+    margin-top:8px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .footer-links a{
+    color:var(--wine);
+    font-weight:700;
+    font-size:.72rem;
+    text-decoration:none;
+  }
+  .footer-links a:hover{text-decoration:underline;}
+  .footer-links .sep{color:rgba(1,2,39,0.3); font-size:.72rem;}
+
+  .credit-bar{
+    background:var(--indigo);
+    color:rgba(246,238,240,0.75);
+    text-align:center;
+    font-size:.74rem;
+    font-weight:600;
+    padding:10px 20px;
+  }
+  .credit-bar .credit-names{
+    color:var(--pink-light);
+    font-weight:800;
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(1,2,39,0.55);
+    align-items:center; justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:#fff;
+    border-radius:16px;
+    max-width:640px;
+    width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 26px;
+    box-shadow:0 20px 60px rgba(1,2,39,0.4);
+  }
+  .modal-box h3{margin:0 0 4px; color:var(--wine); font-size:1.15rem;}
+  .modal-intro{margin:0 0 18px; font-size:.85rem; line-height:1.55; color:rgba(1,2,39,0.65);}
+  .modal-box p{margin:0 0 10px; font-size:.9rem; line-height:1.55; color:var(--navy);}
+  .modal-cols{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;}
+  @media (max-width:520px){.modal-cols{grid-template-columns:1fr;}}
+  .modal-col{border-radius:12px; padding:16px;}
+  .modal-col.trep{background:rgba(30,24,82,0.05); border:1px solid rgba(30,24,82,0.15);}
+  .modal-col.ntrep{background:rgba(249,94,184,0.06); border:1px solid rgba(249,94,184,0.25);}
+  .modal-col h4{margin:0 0 8px; font-size:.85rem; font-weight:800; letter-spacing:.3px;}
+  .modal-col.trep h4{color:var(--indigo);}
+  .modal-col.ntrep h4{color:var(--wine);}
+  .modal-col p{font-size:.82rem; margin:0 0 8px; color:var(--navy);}
+  .modal-col ul{margin:0 0 8px; padding-left:16px; font-size:.8rem; line-height:1.5; color:var(--navy);}
+  .modal-col li{margin-bottom:3px;}
+  .modal-col .sens{font-size:.75rem; color:rgba(1,2,39,0.6); margin:0;}
+  .modal-note{
+    background:rgba(1,2,39,0.035);
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:.82rem;
+    line-height:1.5;
+    color:var(--navy);
+    margin-bottom:4px;
+  }
+  .modal-close{
+    margin-top:8px;
+    width:100%;
+    padding:11px;
+    border-radius:10px;
+    background:var(--indigo);
+    color:#fff;
+    font-weight:700;
+    font-size:.88rem;
+  }
+  .modal-box.wide{max-width:820px;}
+  .tx-table-wrap{width:100%; overflow-x:auto; margin-bottom:18px;}
+  .tx-table{
+    width:100%;
+    min-width:640px;
+    border-collapse:separate;
+    border-spacing:0;
+    font-size:.8rem;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid rgba(1,2,39,0.08);
+  }
+  .tx-table th{
+    background:var(--pink-light);
+    color:var(--navy);
+    font-size:.74rem;
+    font-weight:800;
+    text-align:left;
+    padding:10px 12px;
+    letter-spacing:.2px;
+  }
+  .tx-table td{
+    padding:12px;
+    vertical-align:top;
+    line-height:1.5;
+    color:var(--navy);
+    border-top:1px solid rgba(1,2,39,0.08);
+  }
+  .tx-table tr:nth-child(even) td{background:rgba(162,94,156,0.045);}
+  .tx-table .stage-cell{font-weight:700; color:var(--wine); width:15%;}
+  .tx-table .stage-cell .stage-sub{display:block; font-weight:400; color:rgba(1,2,39,0.6); font-size:.74rem; margin-top:4px;}
+  .tx-table .empty-cell{color:rgba(1,2,39,0.35); font-style:italic;}
+  .modal-source{font-size:.72rem; color:rgba(1,2,39,0.45); margin:0 0 4px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-spacer"></div>
+  <div class="header-left">
+    <div class="logo"><img src="data:image/jpeg;base64,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" alt="Logo VigiSífilis"></div>
+    <div class="header-text">
+      <h1>Fluxogramas de <span class="accent">Sífilis</span></h1>
+      <p>Ferramentas interativas de apoio à decisão clínica, baseadas no protocolo do Ministério da Saúde.</p>
+      <span class="handle">@vigisifilis</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="ficha-btn" onclick="openModal('modalOverlay')">Ficha técnica: testes diagnósticos</button>
+    <button class="ficha-btn" onclick="openModal('modalTx')">Esquema terapêutico</button>
+  </div>
+</header>
+
+<div class="page">
+  <div class="trail" id="progressTrail"></div>
+  <div class="card" id="stageContainer"></div>
+
+  <div class="nav-row">
+    <button class="back-btn" id="backBtn">← Voltar</button>
+    <div class="nav-row-right">
+      <button class="restart-link" id="switchBtn" onclick="goToSelection()">Trocar fluxograma</button>
+      <button class="restart-link" id="restartBtn" onclick="restart()">Reiniciar ↺</button>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    Ferramenta de apoio educacional: a conduta clínica final é sempre responsabilidade da equipe assistencial, conforme avaliação individual do caso.
+    <div class="footer-links">
+      <a href="https://www.gov.br/aids/pt-br/central-de-conteudo/pcdts/2022/ist/pcdt-ist-2022_isbn-1.pdf/@@display-file/file" target="_blank" rel="noopener">PCDT: Atenção Integral às Pessoas com IST (Ministério da Saúde, 2022)</a>
+      <span class="sep">·</span>
+      <a href="https://lume.ufrgs.br/bitstream/handle/10183/280049/001212995.pdf?sequence=1&isAllowed=y" target="_blank" rel="noopener">Protocolo: Diagnóstico e Tratamento da Sífilis (TelessaúdeRS-UFRGS)</a>
+    </div>
+  </footer>
+</div>
+
+<div class="credit-bar">Elaboração: <span class="credit-names">Ianna Napoleão e Rayane Catarina</span></div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3>Testes diagnósticos para sífilis</h3>
+    <p class="modal-intro">Para o diagnóstico, deve-se solicitar um teste treponêmico (preferencialmente teste rápido) associado a um teste não treponêmico. O diagnóstico é confirmado quando ambos são reagentes.</p>
+
+    <div class="modal-cols">
+      <div class="modal-col trep">
+        <h4>TREPONÊMICOS</h4>
+        <p>Detectam anticorpos específicos contra o treponema. São os primeiros a reagir (1 a 3 semanas após o contágio). Permanecem reagentes por toda a vida em até 85% dos casos — por isso não servem para monitorar tratamento, só para avaliação diagnóstica.</p>
+        <ul>
+          <li>Teste rápido (DPP) — mais indicado para início do diagnóstico</li>
+          <li>FTA-Abs — padrão-ouro entre os treponêmicos</li>
+          <li>TPHA / MHA-TP / TPPA</li>
+          <li>ELISA, CMIA, EQL</li>
+        </ul>
+        <p class="sens">Teste rápido: sensibilidade 94,5% · especificidade 93%</p>
+      </div>
+      <div class="modal-col ntrep">
+        <h4>NÃO TREPONÊMICOS</h4>
+        <p>Detectam anticorpos anticardiolipina (não específicos). Levam de 4 a 5 semanas para positivar. Resultado expresso em títulos (1:2 até 1:1024), sem ponto de corte — usados no diagnóstico e no monitoramento da resposta ao tratamento.</p>
+        <ul>
+          <li>VDRL</li>
+          <li>RPR</li>
+          <li>USR</li>
+          <li>TRUST</li>
+        </ul>
+        <p class="sens">VDRL: sensibilidade 78–100% (varia por estágio) · especificidade 98%<br>RPR: sensibilidade 86–100% · especificidade 98%</p>
+      </div>
+    </div>
+
+    <div class="modal-note">
+      <strong>Monitoramento do tratamento:</strong> considerar apenas a queda ou aumento do título em pelo menos 2 diluições, sempre com o mesmo tipo de teste não treponêmico (idealmente do mesmo fabricante).<br><br>
+      <strong>Falso-reagente não treponêmico:</strong> gestação, infecções virais, doenças autoimunes, uso de drogas injetáveis, entre outros.<br>
+      <strong>Falso-não reagente:</strong> infecção pelo HIV e fenômeno prozona (por isso, toda amostra deve ser testada pura e diluída a 1:8).
+    </div>
+
+    <button class="modal-close" onclick="closeModal('modalOverlay')">Fechar</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalTx">
+  <div class="modal-box wide">
+    <h3>Esquema terapêutico para sífilis</h3>
+    <p class="modal-intro">Conforme a classificação clínica da doença (Quadro 9).</p>
+
+    <div class="tx-table-wrap">
+    <table class="tx-table">
+      <thead>
+        <tr>
+          <th>Estadiamento</th>
+          <th>Esquema de 1ª linha (gestantes e não gestantes)</th>
+          <th>Alternativa (não gestantes)</th>
+          <th>Alternativa para gestantes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="stage-cell">Sífilis recente<span class="stage-sub">até 1 ano de evolução — primária, secundária ou latente recente</span></td>
+          <td><strong>Adultos:</strong> Benzilpenicilina benzatina 2,4 milhões UI, IM, dose única (1,2 milhão UI em cada glúteo).<br><br><strong>Crianças e adolescentes &lt;45kg:</strong> Benzilpenicilina benzatina 50.000 UI/kg, IM, dose única (dose máxima total: 2,4 milhões UI).</td>
+          <td>Doxiciclina 100 mg, 12/12 h, por 15 dias.</td>
+          <td rowspan="2">Se gestante com história de reação leve a moderada, sem anafilaxia após uso de penicilina, deve-se realizar o tratamento com penicilina.<br><br>Gestantes com história comprovada de alergia grave/anafilaxia após o uso da penicilina devem ser encaminhadas para dessensibilização.<br><br><strong>Doxiciclina é contraindicada na gestação.</strong></td>
+        </tr>
+        <tr>
+          <td class="stage-cell">Sífilis tardia<span class="stage-sub">mais de 1 ano de evolução (ou ignorada) — latente tardia, latente com duração ignorada ou terciária</span></td>
+          <td>Benzilpenicilina benzatina 2,4 milhões UI, IM, 1x/semana (1,2 milhão UI em cada glúteo), por 3 semanas. Dose total: 7,2 milhões UI, IM.<br><br><strong>Crianças e adolescentes &lt;45kg:</strong> Benzilpenicilina benzatina 50.000 UI/kg, IM, dose única (dose máxima total: 2,4 milhões UI).</td>
+          <td>Doxiciclina 100 mg, 12/12 h, por 30 dias.</td>
+        </tr>
+        <tr>
+          <td class="stage-cell">Neurossífilis</td>
+          <td>Benzilpenicilina potássica/cristalina 18–24 milhões UI/dia, via endovenosa, em doses de 3–4 milhões UI, 4/4h, ou por infusão contínua, por 14 dias.</td>
+          <td>Ceftriaxona 2 g, via endovenosa, 1x/dia, por 10 a 14 dias.</td>
+          <td class="empty-cell">—</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p class="modal-source">Fonte: TelessaúdeRS-UFRGS (2023).</p>
+    <button class="modal-close" onclick="closeModal('modalTx')">Fechar</button>
+  </div>
+</div>
+
+<script>
+const FLOWCHARTS = {
+  adquirida: {
+    label:'Sífilis adquirida',
+    subtitle:'Diagnóstico com teste treponêmico inicial',
+    start:'start',
+    nodes:{
+      start:{ type:'question', text:'Teste rápido para sífilis ou outro teste treponêmico inicial: <strong>reagente?</strong>', yes:'cond_imediato', no:'ulcera' },
+      cond_imediato:{ type:'question', text:'Paciente apresenta <strong>condições que indicam tratamento imediato</strong> com benzilpenicilina benzatina?',
+        criteriaTitle:'Condições que indicam tratamento imediato com benzilpenicilina benzatina',
+        criteria:['Gestante sem tratamento prévio adequado documentado','Sinais/sintomas de sífilis primária ou secundária','Vítimas de violência sexual','Pessoa com chance de perda de acompanhamento no serviço','Pessoa sem diagnóstico prévio de sífilis'],
+        yes:'trat_imediato', no:'trat_previo' },
+      trat_imediato:{ type:'info', text:'Iniciar tratamento de acordo com a suspeita clínica. Notificar se gestante ou pessoa sintomática. Avaliar parcerias sexuais.', next:'vdrl' },
+      trat_previo:{ type:'question', text:'Houve <strong>tratamento prévio</strong> para sífilis com resposta imunológica adequada <strong>E</strong> sem nova exposição sexual de risco?',
+        note:'Resposta imunológica adequada = documentação da queda da titulação em pelo menos 2 diluições em 6 meses para sífilis recente e em 12 meses para sífilis tardia.',
+        yes:'cicatriz1', no:'vdrl' },
+      cicatriz1:{ type:'result', text:'Cicatriz sorológica. Aconselhamento.' },
+      vdrl:{ type:'question', text:'Teste não treponêmico (<strong>VDRL/RPR</strong>) — <strong>reagente?</strong>', yes:'diag1', no:'novo_teste' },
+      diag1:{ type:'result', text:'Diagnóstico de sífilis. Iniciar ou completar tratamento. Notificar caso. Avaliar parcerias sexuais.' },
+      novo_teste:{ type:'info', text:'Solicitar novo teste treponêmico, de metodologia diferente do anterior.', next:'teste_disp' },
+      teste_disp:{ type:'question', text:'Esse novo teste está <strong>disponível</strong>?', yes:'teste_reagente2', no:'avaliar_risco' },
+      avaliar_risco:{ type:'result', text:'Avaliar exposição de risco, sinais e sintomas, histórico de tratamento para definição de conduta.' },
+      teste_reagente2:{ type:'question', text:'O novo teste treponêmico é <strong>reagente?</strong>', yes:'diag2', no:'cicatriz2' },
+      diag2:{ type:'result', text:'Diagnóstico de sífilis. Iniciar ou completar tratamento. Notificar caso. Avaliar parcerias sexuais.' },
+      cicatriz2:{ type:'result', text:'Cicatriz sorológica, se tratamento prévio, ou falso positivo do teste treponêmico inicial.' },
+      ulcera:{ type:'question', text:'Paciente tem <strong>úlcera genital</strong>?', yes:'sindromico', no:'parceria90' },
+      sindromico:{ type:'result', text:'Realizar tratamento sindrômico (ver Apêndice A). Solicitar outro teste treponêmico associado a teste não treponêmico em amostra venosa, idealmente na mesma semana, ou repetir o teste rápido para sífilis em 30 dias. Avaliar as parcerias sexuais.' },
+      parceria90:{ type:'question', text:'Paciente teve <strong>parceria sexual nos últimos 90 dias</strong> com diagnóstico de sífilis?', yes:'tratar_benzat', no:'risco90' },
+      tratar_benzat:{ type:'result', text:'Tratar com benzilpenicilina benzatina, dose única de 2,4 milhões UI, intramuscular (1,2 milhão UI em cada glúteo). Solicitar outro teste treponêmico e teste não treponêmico, idealmente na mesma semana da avaliação inicial. Avaliar as parcerias sexuais.' },
+      risco90:{ type:'question', text:'Houve <strong>risco de exposição</strong> para sífilis nos últimos 90 dias?', yes:'testar30', no:'aconselhamento' },
+      testar30:{ type:'result', text:'Testar novamente em 30 dias.' },
+      aconselhamento:{ type:'result', text:'Aconselhamento.' }
+    }
+  },
+
+  gestacao: {
+    label:'Sífilis na gestação',
+    subtitle:'Investigação e conduta em gestantes',
+    start:'g_start',
+    nodes:{
+      g_start:{ type:'info', text:'Testagem para sífilis em gestantes.',
+        criteriaTitle:'Testar para sífilis em gestantes e puérperas em uma ou mais das seguintes situações',
+        criteria:['Gestante na primeira consulta de pré-natal, no início do terceiro trimestre (28ª semana) e no momento do parto (ou em caso de aborto/natimorto)','Puérpera sem registro de teste para sífilis no pré-natal','Situação de violência sexual (avaliar também outras IST, hepatites virais, HIV e PEP)','Diagnóstico de outras IST','Presença de sinais clínicos de sífilis'],
+        next:'g_hist_trat' },
+      g_hist_trat:{ type:'question', text:'<strong>História de tratamento prévio</strong> para sífilis?', yes:'g_solic_nt', no:'g_realizar_trep' },
+
+      g_solic_nt:{ type:'info', text:'Solicitar teste não treponêmico (VDRL ou RPR). Verificar registro do tratamento realizado e exames de monitorização do tratamento.', next:'g_nt_reagente' },
+      g_nt_reagente:{ type:'question', text:'Teste não treponêmico <strong>reagente?</strong>', yes:'g_resposta_imun', no:'g_risco90' },
+      g_resposta_imun:{ type:'question', text:'<strong>Resposta imunológica adequada</strong> e sem nova exposição sexual de risco?',
+        note:'Resposta imunológica adequada = documentação da queda da titulação em pelo menos 2 diluições em 6 meses para sífilis recente, e em 12 meses para sífilis tardia.',
+        yes:'g_cura', no:'g_diag' },
+      g_cura:{ type:'result', text:'Cura ou cicatriz sorológica. Repetir o mesmo teste não treponêmico nas seguintes situações: início do 3º trimestre; parto ou aborto; história de exposição ou violência sexual; sintomas clínicos de sífilis.' },
+      g_risco90:{ type:'question', text:'Houve <strong>risco de exposição</strong> para sífilis nos últimos 90 dias?', yes:'g_repetir30', no:'g_repetir_sit1' },
+      g_repetir30:{ type:'result', text:'Repetir o mesmo teste não treponêmico em 30 dias.' },
+      g_repetir_sit1:{ type:'result', text:'Repetir o mesmo teste não treponêmico nas seguintes situações: início do 3º trimestre; parto ou aborto; história de exposição ou violência sexual; sintomas clínicos de sífilis.' },
+
+      g_realizar_trep:{ type:'info', text:'Realizar teste treponêmico (preferencialmente teste rápido).', next:'g_trep_reagente' },
+      g_trep_reagente:{ type:'question', text:'Teste treponêmico <strong>reagente?</strong>', yes:'g_trat_imediato', no:'g_ulcera' },
+
+      g_trat_imediato:{ type:'info', text:'Iniciar tratamento imediato. Notificar caso. Avaliar e tratar parcerias sexuais.', next:'g_solic_nt2' },
+      g_solic_nt2:{ type:'info', text:'Solicitar teste não treponêmico (VDRL ou RPR).', next:'g_nt_reagente2' },
+      g_nt_reagente2:{ type:'question', text:'Teste não treponêmico <strong>reagente?</strong>', yes:'g_diag', no:'g_novo_trep' },
+      g_diag:{ type:'info', text:'Diagnóstico de sífilis.', next:'g_trat_final' },
+      g_trat_final:{ type:'result', text:'Realizar tratamento de acordo com a suspeita clínica. Notificar caso (se ainda não notificado). Avaliar e tratar parcerias sexuais. Acompanhamento com VDRL/RPR mensal.' },
+
+      g_novo_trep:{ type:'info', text:'Novo teste treponêmico de metodologia diferente do anterior.', next:'g_teste_disp' },
+      g_teste_disp:{ type:'question', text:'Esse novo teste está <strong>disponível</strong>?', yes:'g_teste_reagente2', no:'g_diag' },
+      g_teste_reagente2:{ type:'question', text:'O novo teste treponêmico é <strong>reagente?</strong>', yes:'g_diag', no:'g_falso_pos' },
+      g_falso_pos:{ type:'result', text:'Falso positivo do teste treponêmico inicial. Repetir o mesmo teste não treponêmico nas seguintes situações: início do 3º trimestre; parto ou aborto; história de exposição ou violência sexual; sintomas clínicos de sífilis.' },
+
+      g_ulcera:{ type:'question', text:'Paciente tem <strong>úlcera genital</strong>?', yes:'g_sindromico', no:'g_parceria90' },
+      g_sindromico:{ type:'result', text:'Realizar tratamento sindrômico (ver Apêndice A). Solicitar outro teste treponêmico associado a teste não treponêmico em amostra venosa, idealmente na mesma semana, ou repetir o teste rápido para sífilis em 30 dias. Avaliar as parcerias sexuais.' },
+      g_parceria90:{ type:'question', text:'Paciente teve <strong>parceria sexual</strong> com diagnóstico de sífilis nos últimos 90 dias?', yes:'g_tratar_benzat', no:'g_risco90b' },
+      g_tratar_benzat:{ type:'result', text:'Tratar com benzilpenicilina benzatina, dose única de 2,4 milhões UI, intramuscular (1,2 milhão UI em cada glúteo). Solicitar outro teste treponêmico e teste não treponêmico, idealmente na mesma semana da avaliação inicial. Avaliar as parcerias sexuais.' },
+      g_risco90b:{ type:'question', text:'Houve <strong>risco de exposição</strong> para sífilis nos últimos 90 dias?', yes:'g_testar30', no:'g_repetir_sit2' },
+      g_testar30:{ type:'result', text:'Testar novamente em 30 dias.' },
+      g_repetir_sit2:{ type:'result', text:'Repetir testagem nas seguintes situações: início do 3º trimestre; parto ou aborto; história de exposição ou violência sexual; sintomas clínicos de sífilis.' }
+    }
+  },
+
+  maternidade: {
+    label:'Sífilis congênita',
+    subtitle:'Avaliação inicial e manejo do recém-nascido',
+    start:'m_start',
+    nodes:{
+      m_start:{ type:'info', text:'Realizar teste rápido de sífilis em toda gestante que chega à maternidade.', next:'m_teste_positivo' },
+      m_teste_positivo:{ type:'question', text:'Teste rápido <strong>positivo?</strong>', yes:'m_mae_tratada', no:'m_sem_necessidade' },
+      m_sem_necessidade:{ type:'result', text:'Sem necessidade de investigação ou de condutas para gestante ou para o RN.' },
+
+      m_mae_tratada:{ type:'question', text:'Mãe foi <strong>tratada de forma adequada</strong> durante a gestação?',
+        criteriaTitle:'Tratamento adequado da gestante com sífilis',
+        criteria:['Administração de benzilpenicilina benzatina <strong>E</strong>','Início do tratamento até 30 dias antes do parto <strong>E</strong>','Esquema terapêutico realizado de acordo com o estágio clínico da infecção <strong>E</strong>','Respeito ao intervalo recomendado de 7 dias entre as doses'],
+        yes:'m_nt_ambos', no:'m_notificar' },
+
+      m_nt_ambos:{ type:'info', text:'Realizar teste não treponêmico de sangue periférico da mãe e do RN, ao mesmo tempo.', next:'m_diluicao' },
+      m_diluicao:{ type:'question', text:'O teste não treponêmico do RN é pelo menos <strong>duas diluições maior</strong> que o materno?', yes:'m_congenita_naotrat', no:'m_exame_normal' },
+      m_exame_normal:{ type:'question', text:'Exame físico do RN é <strong>normal?</strong>', yes:'m_exposta', no:'m_nt_reagente' },
+      m_exposta:{ type:'result', text:'Criança exposta à sífilis: sem necessidade de tratamento imediato. Seguimento clínico e laboratorial na APS.' },
+      m_nt_reagente:{ type:'question', text:'Teste não treponêmico é <strong>reagente?</strong>', yes:'m_congenita_naotrat', no:'m_storch' },
+      m_storch:{ type:'result', text:'Realizar STORCH (sífilis, toxoplasmose, rubéola, citomegalovírus e herpes vírus). Seguimento clínico e laboratorial conforme resultado da investigação.' },
+      m_congenita_naotrat:{ type:'result', text:'Notificar para sífilis congênita: para definição do tratamento, seguir no fluxograma como criança nascida de mãe não adequadamente tratada. Seguimento clínico e laboratorial na APS e na atenção especializada.' },
+
+      m_notificar:{ type:'info', text:'Notificar para sífilis congênita e realizar teste não treponêmico sérico da mãe e do RN, ao mesmo tempo.', next:'m_exames_rn' },
+      m_exames_rn:{ type:'info', text:'Realizar no RN: hemograma completo e glicemia, RX de ossos longos e coletar o liquor (solicitar celularidade, proteinorraquia e VDRL).', next:'m_exame_normal2' },
+      m_exame_normal2:{ type:'question', text:'Exame físico é normal, exames solicitados são todos normais <strong>E</strong> teste não treponêmico do RN é <strong>não reagente?</strong>', yes:'m_assintomatica', no:'m_liquor' },
+      m_assintomatica:{ type:'result', text:'Criança assintomática notificada para sífilis congênita: tratar com benzilpenicilina benzatina, 50.000 UI/kg, dose única, intramuscular. Seguimento clínico e laboratorial na APS e na atenção especializada.' },
+      m_liquor:{ type:'question', text:'O resultado do <strong>liquor</strong> é normal?', yes:'m_sem_neuro', no:'m_com_neuro' },
+      m_sem_neuro:{ type:'result', text:'Criança com sífilis congênita SEM neurossífilis: tratar com benzilpenicilina cristalina (50.000 UI/kg, IV, de 12/12h na 1ª semana de vida, de 8/8h após a 1ª semana, por 10 dias) ou benzilpenicilina procaína (50.000 UI/kg, IM, uma vez ao dia, por 10 dias). Seguimento clínico e laboratorial na APS e na atenção especializada.' },
+      m_com_neuro:{ type:'result', text:'Criança com sífilis congênita COM neurossífilis: tratar com benzilpenicilina cristalina (50.000 UI/kg, IV, de 12/12h na 1ª semana de vida, de 8/8h após a 1ª semana, por 10 dias). Seguimento clínico e laboratorial na APS e na atenção especializada.' }
+    }
+  }
+};
+
+let currentFlow = null;
+let history = [];
+let choices = [];
+
+function criteriaBoxHtml(node){
+  const title = node.criteriaTitle ? `<span class="criteria-title">${node.criteriaTitle}</span>` : '';
+  const list = `<ul>` + node.criteria.map(c=>`<li>${c}</li>`).join('') + `</ul>`;
+  return `<div class="criteria-box">${title}${list}</div>`;
+}
+
+function render(){
+  const container = document.getElementById('stageContainer');
+  const trailEl = document.getElementById('progressTrail');
+
+  if(!currentFlow){
+    renderSelection(container);
+    document.getElementById('backBtn').disabled = true;
+    document.getElementById('restartBtn').style.visibility = 'hidden';
+    document.getElementById('switchBtn').style.visibility = 'hidden';
+    trailEl.innerHTML = '';
+    return;
+  }
+
+  document.getElementById('restartBtn').style.visibility = 'visible';
+  document.getElementById('switchBtn').style.visibility = 'visible';
+  const nodes = FLOWCHARTS[currentFlow].nodes;
+  const id = history[history.length-1];
+  const node = nodes[id];
+  let html = '';
+
+  if(node.type === 'question'){
+    html += `<div class="passo">Passo ${history.length}</div>`;
+    html += `<h2 class="question-title">${node.text}</h2>`;
+
+    if(node.note){
+      html += `<div class="criteria-box"><p class="note-text">${node.note}</p></div>`;
+    }
+    if(node.criteria){
+      html += criteriaBoxHtml(node);
+    }
+
+    html += `<div class="options-grid">`;
+
+    html += `<div class="opt-col yes-col" onclick="goTo('${node.yes}','SIM')">`;
+    html += `<span class="pill yes-pill">SIM</span>`;
+    html += `</div>`;
+
+    html += `<div class="opt-col no-col" onclick="goTo('${node.no}','NÃO')">`;
+    html += `<span class="pill no-pill">NÃO</span>`;
+    html += `</div>`;
+
+    html += `</div>`;
+
+  } else if(node.type === 'info'){
+    html += `<div class="passo">Passo ${history.length}</div>`;
+    html += `<span class="tag info">Conduta</span>`;
+    html += `<div class="single-box info-box">${node.text}</div>`;
+    if(node.criteria){
+      html += criteriaBoxHtml(node);
+    }
+    html += `<button class="continue-btn" onclick="goTo('${node.next}','Continuar')">Continuar →</button>`;
+
+  } else {
+    html += `<div class="passo">Passo ${history.length}</div>`;
+    html += `<span class="tag result">Resultado</span>`;
+    html += `<div class="single-box result-box">${node.text}</div>`;
+    html += `<button class="restart-btn-main" onclick="restart()">↺ Reiniciar fluxograma</button>`;
+  }
+
+  container.innerHTML = html;
+  document.getElementById('backBtn').disabled = false;
+  renderTrail(trailEl);
+}
+
+function stripHtml(str){
+  return str.replace(/<[^>]*>/g, '');
+}
+function trailLabel(nodeId){
+  const node = FLOWCHARTS[currentFlow].nodes[nodeId];
+  let t = stripHtml(node.text);
+  const limit = 26;
+  if(t.length > limit){
+    t = t.slice(0, limit);
+    const lastSpace = t.lastIndexOf(' ');
+    if(lastSpace > 10) t = t.slice(0, lastSpace);
+    t += '…';
+  }
+  return t;
+}
+
+function renderTrail(trailEl){
+  let html = '';
+  history.forEach((id, i)=>{
+    const isCurrent = i === history.length - 1;
+    html += `<div class="trail-step ${isCurrent ? 'current' : 'done'}">
+      <div class="trail-dot">${i+1}</div>
+      <div class="trail-label">${trailLabel(id)}</div>
+    </div>`;
+    if(i < history.length - 1){
+      html += `<div class="trail-connector"></div>`;
+    }
+  });
+  trailEl.innerHTML = html;
+}
+
+function renderSelection(container){
+  let html = `<div class="select-title">Qual fluxograma você quer consultar?</div>`;
+  html += `<p class="select-sub">Escolha o cenário clínico para começar</p>`;
+  html += `<div class="select-grid">`;
+  html += `<div class="select-card card-a" onclick="selectFlow('adquirida')">
+    <div class="sc-icon">01</div>
+    <h3>${FLOWCHARTS.adquirida.label}</h3>
+    <p>${FLOWCHARTS.adquirida.subtitle}</p>
+  </div>`;
+  html += `<div class="select-card card-b" onclick="selectFlow('gestacao')">
+    <div class="sc-icon">02</div>
+    <h3>${FLOWCHARTS.gestacao.label}</h3>
+    <p>${FLOWCHARTS.gestacao.subtitle}</p>
+  </div>`;
+  html += `<div class="select-card card-c" onclick="selectFlow('maternidade')">
+    <div class="sc-icon">03</div>
+    <h3>${FLOWCHARTS.maternidade.label}</h3>
+    <p>${FLOWCHARTS.maternidade.subtitle}</p>
+  </div>`;
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function selectFlow(key){
+  currentFlow = key;
+  history = [FLOWCHARTS[key].start];
+  choices = [''];
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function goTo(nextId, label){
+  history.push(nextId);
+  choices.push(label);
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function back(){
+  if(history.length > 1){
+    history.pop();
+    choices.pop();
+    render();
+  } else if(currentFlow){
+    currentFlow = null;
+    history = [];
+    choices = [];
+    render();
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function restart(){
+  if(currentFlow){
+    history = [FLOWCHARTS[currentFlow].start];
+    choices = [''];
+    render();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+function goToSelection(){
+  currentFlow = null;
+  history = [];
+  choices = [];
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+document.getElementById('backBtn').addEventListener('click', back);
+render();
+</script>
+</body>
+</html>
